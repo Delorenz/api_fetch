@@ -1,0 +1,16 @@
+api.form:
+  path: '/fetch/form'
+  defaults:
+    _controller: '\Drupal\api_call\Controller\ApiFetchFormController::content'
+    _title: 'Form'
+  requirements:
+    _permission: 'access content'
+
+  
+api.result:
+  path: '/fetch/result'
+  defaults:
+    _controller: '\Drupal\api_call\Controller\ApiFetchResultController::content'
+    _title: 'Results'
+  requirements:
+    _permission: 'access content'  
