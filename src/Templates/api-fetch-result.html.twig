@@ -1,0 +1,9 @@
+
+    {% for student in students %}
+            ###################
+            <li>Id :{{ student.uid|e }}</li>
+            <li>Username : {{ student.username|e }}</li>
+            <li>First Name :{{ student.first_name|e }}</li>
+            <li>Last Name :{{ student.last_name|e }}</li>
+            <li>Mail :{{ student.mail|e }}</li>
+    {% endfor %}

@@ -1,13 +1,14 @@
 services:
-  api_fetch_client:
-    class: Drupal\api_fetch\Services\api_fetch_client
+  ApiFetchClient:
+    class: Drupal\api_fetch\Services\ApiFetchClient
     arguments:
       - '@http_client_factory'
-  api_fetch_csv:
-    class: Drupal\api_fetch\Services\api_fetch_csv
-    arguments:
-      - ''
-  api_fetch_save:
-    class: Drupal\api_fetch\Services\api_fetch_save
-    arguments:
-      - ''
+     
+  #api_fetch_csv:
+  #  class: Drupal\api_fetch\Services\api_fetch_csv
+  #  arguments:
+  #    - ''
+  #api_fetch_save:
+  #  class: Drupal\api_fetch\Services\api_fetch_save
+  #  arguments:
+  #    - ''
