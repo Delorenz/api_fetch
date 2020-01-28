@@ -32,7 +32,7 @@ class ApiFetchClient {
    * @return array
    */
   public function getStudent($id) {
-   $url = 'student/get/'.$id;
+   $url = 'student/'.$id;
   
    
     $response = $this->client->get($url);

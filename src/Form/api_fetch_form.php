@@ -7,7 +7,10 @@ namespace Drupal\api_fetch\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\file\Entity;
 
+use Drupal\Component\Utility\Environment;
+use Drupal\Core\File\FileSystemInterface;
 
 class api_fetch_form extends FormBase {
 
@@ -44,20 +47,23 @@ class api_fetch_form extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
 
  
+    $form_state->disableCache(); 
+
+      
+    $form['#attributes'] = [
+      'enctype' => 'multipart/form-data',
+    ];
+
 
     
-    $form['ids'] = [ 
-        '#type' => 'number',
-        '#title' => $this->t('Student(s) unique id(s)'),
-        '#description' => $this->t('Ids'),
-        '#required' => TRUE,
-        ];
+    $form['csvfile'] = [
+      '#title'            => $this->t('CSV File'),
+      '#type'             => 'file',
+      '#description'      => ($max_size = Environment::getUploadMaxSize()) ? $this->t('Due to server restrictions, the <strong>maximum upload file size is @max_size</strong>. Files that exceed this size will be disregarded.', ['@max_size' => format_size($max_size)]) : '',
+      '#element_validate' => ['::validateFileupload'],
+    ];
 
-  
-
-
-
-    // Add a submit button that handles the submission of the form.
+   
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit'),
@@ -83,6 +89,36 @@ class api_fetch_form extends FormBase {
     );
   }
 
+  public static function validateFileupload(&$element, FormStateInterface $form_state, &$complete_form) {
+    
+    $validators = [
+      'file_validate_extensions' => ['csv CSV'],
+    ];
+
+    // @TODO: File_save_upload will probably be deprecated soon as well.
+    // @see https://www.drupal.org/node/2244513.
+    if ($file = file_save_upload('csvfile', $validators, FALSE, 0, FILE_EXISTS_REPLACE)) {
+
+      // The file was saved using file_save_upload() and was added to the
+      // files table as a temporary file. We'll make a copy and let the
+      // garbage collector delete the original upload.
+      $csv_dir = 'public://uploads';
+      $directory_exists = \Drupal::service('file_system')
+        ->prepareDirectory($csv_dir, FileSystemInterface::CREATE_DIRECTORY);
+
+      if ($directory_exists) {
+        $destination = $csv_dir . '/' . $file->getFilename();
+        if (file_copy($file, $destination, FileSystemInterface::EXISTS_REPLACE)) {
+          $form_state->setValue('csvupload', $destination);
+        }
+        else {
+          $form_state->setErrorByName('csvimport', t('Unable to copy upload file to @dest', ['@dest' => $destination]));
+        }
+      }
+    }
+  }
+
+
 
   /**
    * Validate the title and the checkbox of the form
@@ -94,15 +130,25 @@ class api_fetch_form extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    $ids [] = $form_state->getValue('ids');
-   /*
-    if ($ids) {
-      // Set an error for the form element with a key of "title".
-      $form_state->setErrorByName('title', $this->t('Type at least one id'));
+    if ($csvupload = $form_state->getValue('csvupload')) {
+
+      if ($handle = fopen($csvupload, 'r')) {
+
+        if ($line = fgetcsv($handle, 4096)) {
+
+         
+
+          // Validate the uploaded CSV here.
+        
+        }
+        fclose($handle);
+      }
+      else {
+        $form_state->setErrorByName('csvfile', $this->t('Unable to read uploaded file @filepath', ['@filepath' => $csvupload]));
+      }
     }
 
-    
-*/
+
 
    
 
@@ -119,23 +165,38 @@ class api_fetch_form extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    // Display the results.
-    // Call the Static Service Container wrapper
-    // We should inject the messenger service, but its beyond the scope of this example.
-    $messenger = \Drupal::messenger();
-    
-    $messenger->addMessage('IDs: '.$form_state->getValue('ids'));
 
-    $_SESSION['std'] = $this->api_fetch_client->getStudent($form_state->getValue('ids'));
-    $messenger->addMessage($_SESSION['std']['username'] );
+
+
+
+  if ($csvupload = $form_state->getValue('csvupload')) { 
+    
+    if ($handle = fopen($csvupload, 'r')) {
+
+      $i =0;
+      while ($line = fgetcsv($handle, 4096)) {
+
+
+        
+       
+      if($i>0){
+        $std[] = $this->api_fetch_client->getStudent($line[0]);
+        drupal_set_message($std[$i-1]['uid']);
+        drupal_set_message($std[$i-1]['emailStudent']);
+        drupal_set_message($std[$i-1]['nomStudent']);
+        drupal_set_message($std[$i-1]['promoStudent']);
+        }
+        $i++;
+      }
+      
+      fclose($handle);
+    }
+  }
+
  
 
 
 
-
-
-    // Redirect to result page.
-    //  $form_state->setRedirect('<front>');
 
   } 
 
