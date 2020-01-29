@@ -1,0 +1,13 @@
+
+    {% for student in students %}
+            ###################
+            <li>Id :{{ student.uid|e }}</li>
+            <li>Prenom : {{ student.prenomStudent|e }}</li>
+            <li>Nom :{{ student.nomStudent|e }}</li>
+            <li>Email :{{ student.emailStudent|e }}</li>
+            <li>Promo :{{ student.promoStudent|e }}</li>
+            <li>Année Académique :{{ student.anneeAcademiqueStudent|e }}</li>
+            <li>Genre :{{ student.genderStudent|e }}</li>
+            <li>Campus :{{ student.campusStudent|e }}</li>
+            <li>Etat dossier :{{ student.etatDossierStudent|e }}</li>
+    {% endfor %}

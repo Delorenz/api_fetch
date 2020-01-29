@@ -14,7 +14,7 @@ class ApiFetchClient {
   protected $client;
 
   /**
-   * ApiCallClient constructor.
+   * ApiFetchClient constructor.
    *
    * @param $http_client_factory \Drupal\Core\Http\ClientFactory
    */

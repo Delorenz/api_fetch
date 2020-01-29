@@ -15,7 +15,7 @@ use Drupal\Core\File\FileSystemInterface;
 class api_fetch_form extends FormBase {
 
   protected $api_fetch_client;
-
+  protected $parser;
 
   
   /**
@@ -75,8 +75,9 @@ class api_fetch_form extends FormBase {
 
 
 
-  public function __construct( $api_client) {
+  public function __construct( $api_client, $parser) {
     $this->api_fetch_client = $api_client;
+    $this->parser = $parser;
   }
 
   /**
@@ -84,8 +85,8 @@ class api_fetch_form extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      //Getting api client from dependencies container
-      $container->get('ApiFetchClient')
+      $container->get('ApiFetchClient'),
+      $container->get('ApiFetchCsv'),
     );
   }
 
@@ -139,7 +140,7 @@ class api_fetch_form extends FormBase {
          
 
           // Validate the uploaded CSV here.
-        
+          // // if ( $line[0] == 'id' || $line[1] != 'email' )
         }
         fclose($handle);
       }
@@ -165,10 +166,22 @@ class api_fetch_form extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
+  
+    $ids = $this->parser->getIds($form_state);
+    $_SESSION['ParsedData'] = $ids;
 
+    $form_state->setRedirect('api.result');
+    return;
+    
+     /*
+        var_dump($csvupload = $form_state->getValue('csvupload'));
+    var_dump($handle = fopen($csvupload, 'r'));
+    var_dump($line = fgetcsv($handle, 4096));
+    die();
+*/
+    //drupal_set_message($ids[0]);
 
-
-
+/*
   if ($csvupload = $form_state->getValue('csvupload')) { 
     
     if ($handle = fopen($csvupload, 'r')) {
@@ -176,7 +189,9 @@ class api_fetch_form extends FormBase {
       $i =0;
       while ($line = fgetcsv($handle, 4096)) {
 
-
+//TODO : Handle 404 and Exceptions
+// Add fetch by email
+// Check attr
         
        
       if($i>0){
@@ -191,12 +206,11 @@ class api_fetch_form extends FormBase {
       
       fclose($handle);
     }
+    
   }
 
- 
 
-
-
+*/
 
   } 
 

@@ -1,2 +1,17 @@
 <?php
 
+
+function api_fetch_theme($existing, $type, $theme, $path) {
+    return [
+
+      
+      'api-fetch-result' => [
+        'variables' => ['students' => NULL],  
+      ],
+
+      
+
+      
+    ];
+  }
+
