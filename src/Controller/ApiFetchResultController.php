@@ -20,7 +20,7 @@ class ApiFetchResultController extends ControllerBase{
         );
       }
     public function content() {
-        if($_SESSION['ParsedData']){
+        if(isset($_SESSION['ParsedData'])){
 
         $data = $_SESSION['ParsedData'];
         unset($_SESSION['ParsedData']);
@@ -28,13 +28,18 @@ class ApiFetchResultController extends ControllerBase{
 
         foreach($data as $uid){
             $students [] = $this->api_fetch_client->getStudent($uid);
-
         }
             
                // var_dump($students);
             
                
-                    
+               return array(
+                '#theme' => 'api-fetch-result',
+            
+                '#students' => $students,
+                
+    
+                );      
                     
             
         
@@ -43,16 +48,11 @@ class ApiFetchResultController extends ControllerBase{
         }else{
             drupal_set_message('ParsedData not set');
             
+            return $this->redirect('api.form');
 
         }
 
-        return array(
-            '#theme' => 'api-fetch-result',
         
-            '#students' => $students,
-            
-
-            );
     }
     
 }

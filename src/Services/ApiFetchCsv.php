@@ -10,8 +10,8 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Core\File\FileSystemInterface;
 
     //TODO : Handle 404 and Exceptions
-        // Add fetch by email
-        // Check attr
+ 
+  
                 
 
 class ApiFetchCsv{
