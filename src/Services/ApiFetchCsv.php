@@ -21,7 +21,7 @@ class ApiFetchCsv{
    * Validate upload form
    * @param $form_state \Drupal\Core\Form\FormStateInterface
    */
-    public function parserValidateForm(FormStateInterface $form_state){
+    public function parserValidateForm(FormStateInterface &$form_state){
 
         if ($csvupload = $form_state->getValue('csvupload')) {
 
@@ -32,13 +32,20 @@ class ApiFetchCsv{
                
       
                 // Validate the uploaded CSV here.
-                // // if ( $line[0] == 'id' || $line[1] != 'email' )
+                if ( $line[0] != 'id' || $line[1] != 'email' ){
+                    drupal_set_message(' Wrong file structure !');
+                    //Stop form submission here ?
+                    //$form_state->setErrorByName('csvfile', $this->t('Wrong file structure !'));
+                }
               }
               fclose($handle);
             }
             else {
               $form_state->setErrorByName('csvfile', $this->t('Unable to read uploaded file @filepath', ['@filepath' => $csvupload]));
             }
+          }else{
+            drupal_set_message('No file to upload !');
+  
           }
       
     }
@@ -86,7 +93,7 @@ class ApiFetchCsv{
    * @return array
    */   
     public function getIds(FormStateInterface $form_state){
-   
+       $std = NULL;
         if ($csvupload = $form_state->getValue('csvupload')) { 
            
             if ($handle = fopen($csvupload, 'r')) {
@@ -115,7 +122,7 @@ class ApiFetchCsv{
    * @return array
    */  
     public function getEmails(FormStateInterface $form_state){
-
+        $std = NULL;
         if ($csvupload = $form_state->getValue('csvupload')) { 
         
             if ($handle = fopen($csvupload, 'r')) {
