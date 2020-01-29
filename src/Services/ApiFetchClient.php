@@ -8,6 +8,15 @@ use Drupal\Component\Serialization\Json;
 
 class ApiFetchClient {
 
+  /*
+  * TODO:
+  *   -Add getStudentByEmail
+  *   -Add getStudentsByPromo
+  *   -Add getStudentsByAnneeAcademique
+  *   -Handle 404 response from API
+  *   -Set base uri in config ?
+  */  
+
   /**
    * @var \GuzzleHttp\Client
    */
@@ -20,7 +29,7 @@ class ApiFetchClient {
    */
   public function __construct($http_client_factory) {
     $this->client = $http_client_factory->fromOptions([
-      'base_uri' => 'http://localhost/api.test/public/',
+      'base_uri' => 'http://localhost/api.test/public/', //API uri
     ]);
   }
 

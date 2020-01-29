@@ -15,7 +15,7 @@ use Drupal\Core\File\FileSystemInterface;
 class api_fetch_form extends FormBase {
 
   protected $api_fetch_client;
-  protected $parser;
+  protected  $parser;
 
   
   /**
@@ -90,33 +90,38 @@ class api_fetch_form extends FormBase {
     );
   }
 
-  public static function validateFileupload(&$element, FormStateInterface $form_state, &$complete_form) {
-    
-    $validators = [
-      'file_validate_extensions' => ['csv CSV'],
-    ];
 
-    // @TODO: File_save_upload will probably be deprecated soon as well.
-    // @see https://www.drupal.org/node/2244513.
-    if ($file = file_save_upload('csvfile', $validators, FALSE, 0, FILE_EXISTS_REPLACE)) {
+  public /* static <- default */function validateFileupload(&$element, FormStateInterface $form_state, &$complete_form) {
+   
+   $this->parser->parserValidateUpload($form_state); 
+   //vvv Old way vvv
+    /*
+      $validators = [
+        'file_validate_extensions' => ['csv CSV'],
+      ];
 
-      // The file was saved using file_save_upload() and was added to the
-      // files table as a temporary file. We'll make a copy and let the
-      // garbage collector delete the original upload.
-      $csv_dir = 'public://uploads';
-      $directory_exists = \Drupal::service('file_system')
-        ->prepareDirectory($csv_dir, FileSystemInterface::CREATE_DIRECTORY);
+      // @TODO: File_save_upload will probably be deprecated soon as well.
+      // @see https://www.drupal.org/node/2244513.
+      if ($file = file_save_upload('csvfile', $validators, FALSE, 0, FILE_EXISTS_REPLACE)) {
 
-      if ($directory_exists) {
-        $destination = $csv_dir . '/' . $file->getFilename();
-        if (file_copy($file, $destination, FileSystemInterface::EXISTS_REPLACE)) {
-          $form_state->setValue('csvupload', $destination);
-        }
-        else {
-          $form_state->setErrorByName('csvimport', t('Unable to copy upload file to @dest', ['@dest' => $destination]));
+        // The file was saved using file_save_upload() and was added to the
+        // files table as a temporary file. We'll make a copy and let the
+        // garbage collector delete the original upload.
+        $csv_dir = 'public://uploads';
+        $directory_exists = \Drupal::service('file_system')
+          ->prepareDirectory($csv_dir, FileSystemInterface::CREATE_DIRECTORY);
+
+        if ($directory_exists) {
+          $destination = $csv_dir . '/' . $file->getFilename();
+          if (file_copy($file, $destination, FileSystemInterface::EXISTS_REPLACE)) {
+            $form_state->setValue('csvupload', $destination);
+          }
+          else {
+            $form_state->setErrorByName('csvimport', t('Unable to copy upload file to @dest', ['@dest' => $destination]));
+          }
         }
       }
-    }
+    */
   }
 
 
@@ -130,7 +135,10 @@ class api_fetch_form extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
+    $this->parser->parserValidateForm($form_state);
 
+    //vvv Old way vvv
+/*
     if ($csvupload = $form_state->getValue('csvupload')) {
 
       if ($handle = fopen($csvupload, 'r')) {
@@ -149,10 +157,7 @@ class api_fetch_form extends FormBase {
       }
     }
 
-
-
-   
-
+*/
   }
 
 
@@ -165,53 +170,10 @@ class api_fetch_form extends FormBase {
    *   The current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
-  
     $ids = $this->parser->getIds($form_state);
     $_SESSION['ParsedData'] = $ids;
-
     $form_state->setRedirect('api.result');
     return;
-    
-     /*
-        var_dump($csvupload = $form_state->getValue('csvupload'));
-    var_dump($handle = fopen($csvupload, 'r'));
-    var_dump($line = fgetcsv($handle, 4096));
-    die();
-*/
-    //drupal_set_message($ids[0]);
-
-/*
-  if ($csvupload = $form_state->getValue('csvupload')) { 
-    
-    if ($handle = fopen($csvupload, 'r')) {
-
-      $i =0;
-      while ($line = fgetcsv($handle, 4096)) {
-
-//TODO : Handle 404 and Exceptions
-// Add fetch by email
-// Check attr
-        
-       
-      if($i>0){
-        $std[] = $this->api_fetch_client->getStudent($line[0]);
-        drupal_set_message($std[$i-1]['uid']);
-        drupal_set_message($std[$i-1]['emailStudent']);
-        drupal_set_message($std[$i-1]['nomStudent']);
-        drupal_set_message($std[$i-1]['promoStudent']);
-        }
-        $i++;
-      }
-      
-      fclose($handle);
-    }
-    
-  }
-
-
-*/
-
   } 
 
 }
