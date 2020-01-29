@@ -170,8 +170,8 @@ class api_fetch_form extends FormBase {
    *   The current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $ids = $this->parser->getIds($form_state);
-    $_SESSION['ParsedData'] = $ids;
+    $emails = $this->parser->getEmails($form_state);
+    $_SESSION['ParsedData'] = $emails;
     $form_state->setRedirect('api.result');
     return;
   } 

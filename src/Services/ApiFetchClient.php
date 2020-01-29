@@ -49,6 +49,22 @@ class ApiFetchClient {
     return Json::decode($response->getBody());
   }
 
+   /**
+   * Get student by email
+   *
+   * @param int $email
+   *
+   * @return array
+   */
+  public function getStudentByEmail($email) {
+    $url = 'student/mail/'.$email;
+   
+    
+     $response = $this->client->get($url);
+ 
+     return Json::decode($response->getBody());
+   }
+
 
   /**
    * Get all students

@@ -32,7 +32,7 @@ class ApiFetchCsv{
                
       
                 // Validate the uploaded CSV here.
-                if ( $line[0] != 'id' || $line[1] != 'email' ){
+                if ( $line[0] != 'uid' || $line[1] != 'mail' ){
                     drupal_set_message(' Wrong file structure !');
                     //Stop form submission here ?
                     //$form_state->setErrorByName('csvfile', $this->t('Wrong file structure !'));
@@ -133,7 +133,7 @@ class ApiFetchCsv{
     
             
                 if($i>0){
-                    $std[] = $line[1];
+                    $std[] =trim($line[1]);
                 }
                 $i++;
                 

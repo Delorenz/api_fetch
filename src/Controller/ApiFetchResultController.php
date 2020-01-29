@@ -25,9 +25,9 @@ class ApiFetchResultController extends ControllerBase{
         $data = $_SESSION['ParsedData'];
         unset($_SESSION['ParsedData']);
 
-
-        foreach($data as $uid){
-            $students [] = $this->api_fetch_client->getStudent($uid);
+            
+        foreach($data as $mail){
+            $students [] = $this->api_fetch_client->getStudentByEmail($mail);
         }
             
                // var_dump($students);
