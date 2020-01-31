@@ -20,7 +20,7 @@ class ApiFetchResultController extends ControllerBase{
         return new static(
           $container->get('ApiFetchClient'),
           $container->get('ApiFetchCsv'),
-          $container->get('ApiFetchSave'),
+          $container->get('ApiFetchStudent'),
         );
       }
     public function content() {

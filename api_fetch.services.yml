@@ -8,7 +8,7 @@ services:
     class: Drupal\api_fetch\Services\ApiFetchCsv
     #arguments:
     #  - ''
-  ApiFetchSave:
-    class: Drupal\api_fetch\Services\ApiFetchSave
-    arguments:
-      - ''
+  ApiFetchStudent:
+    class: Drupal\api_fetch\Services\ApiFetchStudent
+    #arguments:
+    #  - ''

@@ -8,18 +8,12 @@ use Drupal\user\Entity\User;
 use Drupal\Core\Entity;
 
 
-class ApiFetchSave {
-
- 
- 
-
-  
-
+class ApiFetchStudent {
 
   public function addStudent($data){
 
     
-
+    //Check if user already exist in DB
     $account = User::load( $data['uid']);
 
     if($account == NULL){
@@ -33,10 +27,11 @@ class ApiFetchSave {
       $user->setEmail($data['emailStudent']);
       $user->setUsername($data['nomStudent']);
       $user->set('uid', $data['uid']);
+      $user->addRole('Student');
       $result = $user->save();
 
       if($result){
-        drupal_set_message("l'utilisateur ".$data["nomStudent"]." a été crée");
+        drupal_set_message("l'utilisateur ".$data["nomStudent"]." a été créé");
         //add data to user_data fields
         $student = array("prenomStudent"=>$data['genderStudent'] ,
         'genderStudent'=> $data['genderStudent'], 
@@ -44,8 +39,6 @@ class ApiFetchSave {
         'anneeAcademiqueStudent' =>$data['anneeAcademiqueStudent'],
         'campusStudent'=>$data['campusStudent'],
         'etatDossierStudent'=>$data['etatDossierStudent']);
-
-
 
         $userData = \Drupal::service('user.data');
         $userData->set('api_fetch', $data['uid'], 'student_data', $student);
