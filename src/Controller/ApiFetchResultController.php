@@ -5,9 +5,10 @@ use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 class ApiFetchResultController extends ControllerBase{
 
-    public function __construct( $api_client, $parser) {
+    public function __construct( $api_client, $parser, $ssave) {
         $this->api_fetch_client = $api_client;
         $this->parser = $parser;
+        $this->ssave = $ssave;
       }
     
       /**
@@ -17,6 +18,7 @@ class ApiFetchResultController extends ControllerBase{
         return new static(
           $container->get('ApiFetchClient'),
           $container->get('ApiFetchCsv'),
+          $container->get('ApiFetchSave'),
         );
       }
     public function content() {
@@ -25,9 +27,14 @@ class ApiFetchResultController extends ControllerBase{
         $data = $_SESSION['ParsedData'];
         unset($_SESSION['ParsedData']);
 
-            
+        //Fetch students from API    
         foreach($data as $mail){
-            $students [] = $this->api_fetch_client->getStudentByEmail($mail);
+            $students [] = $this->api_fetch_client->getStudentByEmail($mail); 
+        }
+
+        //Add Students to Database
+        foreach($students as $student){
+          $this->ssave->addStudent($student);
         }
             
                // var_dump($students);
