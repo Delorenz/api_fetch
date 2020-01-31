@@ -10,5 +10,5 @@ services:
     #  - ''
   ApiFetchSave:
     class: Drupal\api_fetch\Services\ApiFetchSave
-  #  arguments:
-  #    - ''
+    arguments:
+      - ''

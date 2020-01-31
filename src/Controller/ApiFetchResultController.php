@@ -1,8 +1,10 @@
 <?php
 
 namespace Drupal\api_fetch\Controller;
+
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
 class ApiFetchResultController extends ControllerBase{
 
     public function __construct( $api_client, $parser, $ssave) {
@@ -32,11 +34,13 @@ class ApiFetchResultController extends ControllerBase{
             $students [] = $this->api_fetch_client->getStudentByEmail($mail); 
         }
 
+
+
         //Add Students to Database
         foreach($students as $student){
           $this->ssave->addStudent($student);
         }
-            
+                //var_dump( $this->ssave->getStudentData(2));
                // var_dump($students);
             
                
