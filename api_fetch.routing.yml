@@ -14,3 +14,11 @@ api.result:
     _title: 'Results'
   requirements:
     _permission: 'access content'  
+
+api.testassign:
+  path: '/testAssign'
+  defaults:
+    _controller: '\Drupal\api_fetch\Controller\TestAssignController::content'
+    _title: 'TestAssign'
+  requirements:
+    _permission: 'access content'

@@ -27,7 +27,7 @@ class ApiFetchStudent {
       $user->setEmail($data['emailStudent']);
       $user->setUsername($data['nomStudent']);
       $user->set('uid', $data['uid']);
-      $user->addRole('Student');
+     // $user->addRole('Student'); // ==> crashes admin/people
       $result = $user->save();
 
       if($result){
