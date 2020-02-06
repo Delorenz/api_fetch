@@ -12,3 +12,5 @@ services:
     class: Drupal\api_fetch\Services\ApiFetchStudent
     #arguments:
     #  - ''
+  ApiFetchAssign:
+    class: Drupal\api_fetch\Services\ApiFetchAssign
