@@ -1,6 +1,6 @@
 # ApiFetch:
 
-   # Fonctionnalitées:
+   # Fonctionnalités:
           -Upload d'un fichier au format csv
           -extraction des Ids/Emails du fichier
           -Consommation de l'API à partir des informations récupérées dans le fichier
